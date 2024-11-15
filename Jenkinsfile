@@ -9,14 +9,14 @@ pipeline {
         stage('Build Employee Service') {
             steps {
                 dir('Employee-Service') {
-                    sh 'mvn clean install'
+                    sh '/path/to/maven/bin/mvn -f Employee-Service/pom.xml clean install'
                 }
             }
         }
         stage('Build Department Service') {
             steps {
                 dir('Department-Service') {
-                    sh 'mvn clean install'
+                     sh '/path/to/maven/bin/mvn -f Employee-Service/pom.xml clean install'
                 }
             }
         }
