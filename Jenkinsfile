@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-                sh 'ls -la'
+                sh 'ls -la'  // List the files to ensure the repo is checked out correctly
             }
         }
 
@@ -13,15 +13,15 @@ pipeline {
             parallel {
                 stage('Build Employee Service') {
                     steps {
-                        dir('Employee-Service') {
-                            sh 'mvn clean install'
+                        dir('Employee-Service') {  // Move into the Employee-Service directory
+                            sh '/Users/chayan/.jenkins/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin/mvn clean install'  // Use the full path to Maven
                         }
                     }
                 }
                 stage('Build Department Service') {
                     steps {
-                        dir('Department-Service') {
-                            sh 'mvn clean install'
+                        dir('Department-Service') {  // Move into the Department-Service directory
+                            sh '/Users/chayan/.jenkins/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin/mvn clean install'  // Use the full path to Maven
                         }
                     }
                 }
@@ -38,7 +38,6 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed!'
-            // Consider sending notifications or triggering other actions on failure
         }
     }
 }
