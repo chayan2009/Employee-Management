@@ -17,11 +17,11 @@ pipeline {
                         echo "Building Employee-Service..."
                         sh 'mvn clean install'
                     }
-                    // Build Department-Service
-                    dir('Department-Service') {
-                        echo "Building Department-Service..."
-                        sh 'mvn clean install'
-                    }
+                    // // Build Department-Service
+                    // dir('Department-Service') {
+                    //     echo "Building Department-Service..."
+                    //     sh 'mvn clean install'
+                    // }
                 }
             }
         }
