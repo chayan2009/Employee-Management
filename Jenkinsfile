@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven3'  // Use the Maven tool installed in Jenkins
+        maven 'Maven3'  
     }
 
     stages {
@@ -15,7 +15,6 @@ pipeline {
         stage('Build Employee Service') {
             steps {
                 dir('Employee-Service') {
-                    // Run Maven build in Employee-Service directory
                     sh 'mvn clean install'
                 }
             }
@@ -24,7 +23,6 @@ pipeline {
         stage('Build Department Service') {
             steps {
                 dir('Department-Service') {
-                    // Run Maven build in Department-Service directory
                     sh 'mvn clean install'
                 }
             }
