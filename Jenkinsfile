@@ -16,7 +16,7 @@ pipeline {
 
         stage('Build Employee Service') {
             steps {
-                dir('employee-service') {  // Navigate to the employee-service directory
+                dir('Employee-Service') {  // Navigate to the employee-service directory
                     sh 'mvn clean install -f pom.xml'  // Run Maven build inside this directory
                 }
             }
@@ -24,7 +24,7 @@ pipeline {
 
         stage('Build Department Service') {
             steps {
-                dir('department-service') {  // Navigate to the department-service directory
+                dir('Department-Service') {  // Navigate to the department-service directory
                     sh 'mvn clean install -f pom.xml'  // Run Maven build inside this directory
                 }
             }
