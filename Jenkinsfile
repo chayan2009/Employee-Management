@@ -11,13 +11,17 @@ pipeline {
 
         stage('Build Employee Service') {
             steps {
-                sh 'mvn clean install -f Employee-Service/pom.xml'  // Run Maven build for Employee Service
+                dir('Employee-Service') {  // Navigate to Employee-Service directory
+                    sh 'mvn clean install'  // Run Maven build for Employee Service
+                }
             }
         }
 
         stage('Build Department Service') {
             steps {
-                sh 'mvn clean install -f Department-Service/pom.xml'  // Run Maven build for Department Service
+                dir('Department-Service') {  // Navigate to Department-Service directory
+                    sh 'mvn clean install'  // Run Maven build for Department Service
+                }
             }
         }
     }
