@@ -4,28 +4,28 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout scm  // Checkout the repository
             }
         }
 
         stage('Debug Workspace') {
             steps {
-                sh 'ls -R'  // List all files in the workspace
+                sh 'ls -R'  // List all files in the workspace to verify the structure
             }
         }
 
         stage('Build Employee Service') {
             steps {
-                dir('employee-service') {
-                    sh './mvnw clean install'
+                dir('employee-service') {  // Navigate to the employee-service directory
+                    sh 'mvn clean install -f pom.xml'  // Run Maven build inside this directory
                 }
             }
         }
 
         stage('Build Department Service') {
             steps {
-                dir('department-service') {
-                    sh './mvnw clean install'
+                dir('department-service') {  // Navigate to the department-service directory
+                    sh 'mvn clean install -f pom.xml'  // Run Maven build inside this directory
                 }
             }
         }
@@ -33,13 +33,13 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+            archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true  // Archive the build artifacts (JAR files)
         }
         success {
-            echo 'Pipeline succeeded!'
+            echo 'Pipeline succeeded!'  // Success message if the build passes
         }
         failure {
-            echo 'Pipeline failed!'
+            echo 'Pipeline failed!'  // Failure message if the build fails
         }
     }
 }
