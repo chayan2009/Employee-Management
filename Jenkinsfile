@@ -20,14 +20,6 @@ pipeline {
             }
         }
 
-        stage('Build Department Service') {
-            steps {
-                // Build Department Service
-                dir('Department-Service') {
-                    sh 'mvn clean install'
-                }
-            }
-        }
     }
 
     post {
