@@ -4,23 +4,26 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm  // Checkout the repository
-                sh 'ls -R'     // List all files to verify the structure after checkout
+                checkout scm
+                sh 'ls -la'
             }
         }
 
-        stage('Build Employee Service') {
-            steps {
-                dir('Employee-Service') {  // Navigate to Employee-Service directory
-                    sh 'mvn clean install'  // Run Maven build for Employee Service
+        stage('Build Services') {
+            parallel {
+                stage('Build Employee Service') {
+                    steps {
+                        dir('Employee-Service') {
+                            sh 'mvn clean install'
+                        }
+                    }
                 }
-            }
-        }
-
-        stage('Build Department Service') {
-            steps {
-                dir('Department-Service') {  // Navigate to Department-Service directory
-                    sh 'mvn clean install'  // Run Maven build for Department Service
+                stage('Build Department Service') {
+                    steps {
+                        dir('Department-Service') {
+                            sh 'mvn clean install'
+                        }
+                    }
                 }
             }
         }
@@ -28,13 +31,14 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true  // Archive the build artifacts (JAR files)
+            archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
         }
         success {
-            echo 'Pipeline succeeded!'  // Success message if the build passes
+            echo 'Pipeline succeeded!'
         }
         failure {
-            echo 'Pipeline failed!'  // Failure message if the build fails
+            echo 'Pipeline failed!'
+            // Consider sending notifications or triggering other actions on failure
         }
     }
 }
