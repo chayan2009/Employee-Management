@@ -1,22 +1,27 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.8.4-jdk-11'  // Use Maven Docker image
-            args '-v /tmp:/tmp'  // Optional: Volume mount for temp files
-        }
+    agent any
+    tools {
+        maven 'Maven3'  // Ensure Maven is configured in Jenkins
     }
     stages {
-        stage('Build Employee Service') {
+        stage('Checkout') {
             steps {
-                dir('Employee-Service') {
-                    sh '/path/to/maven/bin/mvn -f Employee-Service/pom.xml clean install'
-                }
+                checkout scm
             }
         }
-        stage('Build Department Service') {
+        stage('Build Services') {
             steps {
-                dir('Department-Service') {
-                     sh '/path/to/maven/bin/mvn -f Employee-Service/pom.xml clean install'
+                script {
+                    // Build Employee-Service
+                    dir('Employee-Service') {
+                        echo "Building Employee-Service..."
+                        sh 'mvn clean install'
+                    }
+                    // Build Department-Service
+                    dir('Department-Service') {
+                        echo "Building Department-Service..."
+                        sh 'mvn clean install'
+                    }
                 }
             }
         }
