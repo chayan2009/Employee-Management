@@ -30,7 +30,7 @@ pipeline {
                     if (fileExists('Employee-Service/pom.xml')) {
                         dir('Employee-Service') {
                             echo "Building Employee-Service..."
-                            sh './mvnw clean install' // Use the Maven wrapper if available
+                            sh './mvnw clean install' // Use Maven wrapper or replace with `mvn` if not used
                         }
                     } else {
                         error "Employee-Service pom.xml not found!"
@@ -40,7 +40,7 @@ pipeline {
                     if (fileExists('Department-Service/pom.xml')) {
                         dir('Department-Service') {
                             echo "Building Department-Service..."
-                            sh './mvnw clean install' // Use the Maven wrapper if available
+                            sh './mvnw clean install' // Use Maven wrapper or replace with `mvn` if not used
                         }
                     } else {
                         error "Department-Service pom.xml not found!"
