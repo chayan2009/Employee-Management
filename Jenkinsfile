@@ -9,30 +9,15 @@ pipeline {
             }
         }
 
-        stage('Debug Workspace') {
-            steps {
-                sh 'pwd'      // Print the current working directory
-                sh 'ls -R'    // List all files in the workspace
-            }
-        }
-
         stage('Build Employee Service') {
             steps {
-                dir('Employee-Service') {  // Navigate to the employee-service directory
-                    sh 'pwd'  // Print the current working directory
-                    sh 'ls'   // List files in the employee-service directory
-                    sh 'mvn clean install -f pom.xml'  // Run Maven build inside this directory
-                }
+                sh 'mvn clean install -f Employee-Service/pom.xml'  // Run Maven build for Employee Service
             }
         }
 
         stage('Build Department Service') {
             steps {
-                dir('Department-Service') {  // Navigate to the department-service directory
-                    sh 'pwd'  // Print the current working directory
-                    sh 'ls'   // List files in the department-service directory
-                    sh 'mvn clean install -f pom.xml'  // Run Maven build inside this directory
-                }
+                sh 'mvn clean install -f Department-Service/pom.xml'  // Run Maven build for Department Service
             }
         }
     }
