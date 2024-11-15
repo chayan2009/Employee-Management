@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven3' // Ensure Maven is configured in Jenkins
+        maven 'Maven3' // Ensure Maven3 is installed and configured in Jenkins
     }
 
     environment {
@@ -13,65 +13,39 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                script {
-                    // Clean workspace and checkout the repository
-                    checkout([$class: 'GitSCM',
-                        branches: [[name: "*/${BRANCH}"]],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [[$class: 'CleanCheckout']],
-                        userRemoteConfigs: [[url: GIT_REPO]]
-                    ])
-                }
-                // Debugging: Verify the workspace structure
-                sh 'ls -la'
-            }
-        }
-
-        stage('Debug Workspace') {
-            steps {
-                echo "Debugging workspace structure..."
-                sh '''
-                echo "Current directory: $(pwd)"
-                echo "Workspace structure:"
-                ls -la
-                echo "Contents of Employee-Service:"
-                ls -la Employee-Service || echo "Employee-Service directory missing"
-                echo "Contents of Department-Service:"
-                ls -la Department-Service || echo "Department-Service directory missing"
-                '''
+                // Clone the repository
+                checkout([$class: 'GitSCM',
+                    branches: [[name: "*/${BRANCH}"]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [[$class: 'CleanCheckout']],
+                    userRemoteConfigs: [[url: GIT_REPO]]
+                ])
             }
         }
 
         stage('Build Services') {
             steps {
                 script {
-                    // Build Employee-Service
+                    // Navigate to Employee-Service and build
                     if (fileExists('Employee-Service/pom.xml')) {
-                        echo "Building Employee-Service..."
                         dir('Employee-Service') {
-                            sh './mvnw clean install'
+                            echo "Building Employee-Service..."
+                            sh './mvnw clean install' // Use the Maven wrapper if available
                         }
                     } else {
-                        echo "Employee-Service directory or POM file missing!"
+                        error "Employee-Service pom.xml not found!"
                     }
 
-                    // Build Department-Service
+                    // Navigate to Department-Service and build
                     if (fileExists('Department-Service/pom.xml')) {
-                        echo "Building Department-Service..."
                         dir('Department-Service') {
-                            sh './mvnw clean install'
+                            echo "Building Department-Service..."
+                            sh './mvnw clean install' // Use the Maven wrapper if available
                         }
                     } else {
-                        echo "Department-Service directory or POM file missing!"
+                        error "Department-Service pom.xml not found!"
                     }
                 }
-            }
-        }
-
-        stage('Post-Build Cleanup') {
-            steps {
-                echo "Cleaning up workspace..."
-                cleanWs()
             }
         }
     }
@@ -79,12 +53,16 @@ pipeline {
     post {
         success {
             echo "Build completed successfully!"
+            mail to: 'vikasbk0777@gmail.com, chayanchowdhury@gmail.com',
+                 subject: "Build SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: "The build succeeded!\n\nCheck details here: ${env.BUILD_URL}"
         }
+
         failure {
-            echo "Build failed. Please check the logs."
-        }
-        always {
-            echo "Pipeline execution finished."
+            echo "Build failed!"
+            mail to: 'vikasbk0777@gmail.com, chayanchowdhury@gmail.com',
+                 subject: "Build FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: "The build failed.\n\nCheck details here: ${env.BUILD_URL}"
         }
     }
 }
