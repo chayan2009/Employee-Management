@@ -1,18 +1,23 @@
 pipeline {
     agent any
 
+    tools {
+        // Use the Maven tool installed in Jenkins (adjust the name to match your installation)
+        maven 'Maven3'
+    }
+
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
-                sh 'ls -la'  // List files to verify the directory structure
             }
         }
 
         stage('Build Employee Service') {
             steps {
                 dir('Employee-Service') {
-                    sh 'mvn clean install'  // Run Maven in the Employee-Service directory
+                    // Use Maven to build the Employee-Service
+                    sh 'mvn clean install'
                 }
             }
         }
@@ -20,21 +25,10 @@ pipeline {
         stage('Build Department Service') {
             steps {
                 dir('Department-Service') {
-                    sh 'mvn clean install'  // Run Maven in the Department-Service directory
+                    // Use Maven to build the Department-Service
+                    sh 'mvn clean install'
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
-        }
-        success {
-            echo 'Pipeline succeeded!'
-        }
-        failure {
-            echo 'Pipeline failed!'
         }
     }
 }
