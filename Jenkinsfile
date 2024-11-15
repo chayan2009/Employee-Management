@@ -11,8 +11,8 @@ pipeline {
 
         stage('Debug Workspace') {
             steps {
-                sh 'pwd'  // Print the current working directory
-                sh 'ls -R'  // List all files in the workspace
+                sh 'pwd'      // Print the current working directory
+                sh 'ls -R'    // List all files in the workspace
             }
         }
 
