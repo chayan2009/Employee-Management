@@ -4,29 +4,27 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                // Checkout the code from the repository
                 checkout scm
-                sh 'ls -la'  // List files to ensure repo is checked out correctly
-                sh 'pwd'      // Confirm the current directory in the workspace
+                // List files in the workspace to verify the structure
+                sh 'ls -la'
             }
         }
 
-        stage('Build Services') {
-            parallel {
-                stage('Build Employee Service') {
-                    steps {
-                        dir('Employee-Service') {  // Change directory to Employee-Service
-                            sh 'pwd'  // Verify we're in Employee-Service
-                            sh '/Users/chayan/.jenkins/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin/mvn clean install'  // Use full path to Maven
-                        }
-                    }
+        stage('Build Employee Service') {
+            steps {
+                // Build Employee Service
+                dir('Employee-Service') {
+                    sh 'mvn clean install'
                 }
-                stage('Build Department Service') {
-                    steps {
-                        dir('Department-Service') {  // Change directory to Department-Service
-                            sh 'pwd'  // Verify we're in Department-Service
-                            sh '/Users/chayan/.jenkins/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin/mvn clean install'  // Use full path to Maven
-                        }
-                    }
+            }
+        }
+
+        stage('Build Department Service') {
+            steps {
+                // Build Department Service
+                dir('Department-Service') {
+                    sh 'mvn clean install'
                 }
             }
         }
@@ -34,6 +32,7 @@ pipeline {
 
     post {
         always {
+            // Archive any built artifacts, even if no build happens
             archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
         }
         success {
@@ -41,6 +40,7 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed!'
+            // Consider sending notifications or triggering other actions on failure
         }
     }
 }
