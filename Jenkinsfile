@@ -4,27 +4,30 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from the repository
                 checkout scm
-                // List files in the workspace to verify the structure
-                sh 'ls -la'
+                sh 'ls -la'  // List files to verify the directory structure
             }
         }
 
         stage('Build Employee Service') {
             steps {
-                // Build Employee Service
                 dir('Employee-Service') {
-                    sh 'mvn clean install'
+                    sh 'mvn clean install'  // Run Maven in the Employee-Service directory
                 }
             }
         }
 
+        stage('Build Department Service') {
+            steps {
+                dir('Department-Service') {
+                    sh 'mvn clean install'  // Run Maven in the Department-Service directory
+                }
+            }
+        }
     }
 
     post {
         always {
-            // Archive any built artifacts, even if no build happens
             archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
         }
         success {
@@ -32,7 +35,6 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed!'
-            // Consider sending notifications or triggering other actions on failure
         }
     }
 }
