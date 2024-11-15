@@ -7,7 +7,6 @@ pipeline {
 
     stages {
 
-        // Check environment setup
         stage('Check Environment') {
             steps {
                 sh 'echo "Checking Maven version..."'
@@ -20,26 +19,27 @@ pipeline {
             }
         }
 
-        // Checkout the code
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        // Build Employee Service
         stage('Build Employee Service') {
             steps {
                 dir('Employee-Service') {
+                    sh 'pwd'  // Check the current directory
+                    sh 'ls -la'  // List files to verify the presence of pom.xml
                     sh 'mvn clean install'
                 }
             }
         }
 
-        // Build Department Service
         stage('Build Department Service') {
             steps {
                 dir('Department-Service') {
+                    sh 'pwd'  // Check the current directory
+                    sh 'ls -la'  // List files to verify the presence of pom.xml
                     sh 'mvn clean install'
                 }
             }
